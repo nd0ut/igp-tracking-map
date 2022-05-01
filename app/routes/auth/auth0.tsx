@@ -6,5 +6,8 @@ import { authenticator } from "~/util/auth.server";
 export let loader: LoaderFunction = () => redirect("/login");
 
 export let action: ActionFunction = ({ request }) => {
-  return authenticator.authenticate("auth0", request);
+  return authenticator.authenticate("auth0", request, {
+    successRedirect: "/dashboard",
+    failureRedirect: "/",
+  });
 };

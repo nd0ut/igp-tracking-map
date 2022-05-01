@@ -14,6 +14,13 @@ import { RecoilRoot, type MutableSnapshot } from "recoil";
 import { useCallback } from "react";
 import { userAtom } from "./store/userAtom";
 import { getSession } from "./services/session.server";
+import styles from "./styles/app.css";
+
+export function links() {
+  return [
+    { rel: "stylesheet", href: styles },
+  ];
+}
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -44,7 +51,7 @@ export default function App() {
   );
 
   return (
-    <html lang="en">
+    <html lang="en" data-theme="light">
       <head>
         <Meta />
         <Links />

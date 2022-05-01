@@ -8,7 +8,7 @@ processes = []
 
 [env]
   PORT = "8080"
-  AUTH0_CALLBACK_URL="https://igp-tracking-map.fly.dev/auth/auth0/callback"
+  AUTH0_CALLBACK_URL="https://trackingmap.ru/auth/auth0/callback"
   AUTH0_CLIENT_ID="SEE SECRETS"
   AUTH0_CLIENT_SECRET="SEE SECRETS"
   AUTH0_DOMAIN="dev-9x7hxs1e.us.auth0.com"
