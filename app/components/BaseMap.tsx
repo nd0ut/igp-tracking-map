@@ -5,13 +5,15 @@ import geocoderStyles from "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.c
 import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import mapboxgl from "mapbox-gl";
 import mapboxStyles from "mapbox-gl/dist/mapbox-gl.css";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { forwardRef } from "react";
 import Map, {
+  type ControlPosition,
   GeolocateControl,
   NavigationControl,
   ScaleControl,
   useControl,
+  useMap,
 } from "react-map-gl";
 import { useRecoilValue } from "recoil";
 import { envAtom } from "~/store/envAtom";
@@ -37,12 +39,35 @@ export function MapboxGeocoderControl() {
   return null;
 }
 
-export function DrawControl(
-  props: ConstructorParameters<typeof MapboxDraw>[0]
-) {
-  useControl(() => {
-    return new MapboxDraw(props);
-  });
+type DrawControlProps = ConstructorParameters<typeof MapboxDraw>[0] & {
+  position?: ControlPosition;
+  onDrawCreate?: (e: MapboxDraw.DrawCreateEvent) => void;
+  onDrawDelete?: (e: MapboxDraw.DrawDeleteEvent) => void;
+  onDrawUpdate?: (e: MapboxDraw.DrawUpdateEvent) => void;
+};
+
+export function DrawControl(props: DrawControlProps) {
+  const { current: map } = useMap();
+
+  useEffect(() => {
+    props.onDrawCreate && map?.on("draw.create", props.onDrawCreate);
+    props.onDrawDelete && map?.on("draw.delete", props.onDrawDelete);
+    props.onDrawUpdate && map?.on("draw.update", props.onDrawUpdate);
+
+    return () => {
+      props.onDrawCreate && map?.off("draw.create", props.onDrawCreate);
+      props.onDrawDelete && map?.off("draw.delete", props.onDrawDelete);
+      props.onDrawUpdate && map?.off("draw.update", props.onDrawUpdate);
+    };
+  }, [map, props.onDrawCreate, props.onDrawDelete, props.onDrawUpdate]);
+
+  useControl(
+    () => {
+      const draw = new MapboxDraw(props);
+      return draw;
+    },
+    { position: props.position }
+  );
 
   return null;
 }
@@ -55,19 +80,17 @@ export function MapboxLanguageControl() {
   return null;
 }
 
-export const BaseMap = forwardRef(function BaseMap(
-  {
-    children,
-    ...props
-  }: React.ComponentPropsWithoutRef<typeof Map> & { children?: React.ReactNode },
-  ref: React.ComponentPropsWithRef<typeof Map>['ref']
-) {
+export const BaseMap = function BaseMap({
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof Map> & {
+  children?: React.ReactNode;
+}) {
   const env = useRecoilValue(envAtom);
   const geolocateControlRef = useRef<{ trigger: () => boolean }>(null);
 
   return (
     <Map
-      ref={ref}
       mapboxAccessToken={env.MAPBOX_ACCESS_TOKEN_PUBLIC}
       onLoad={() => geolocateControlRef.current?.trigger()}
       {...props}
@@ -83,4 +106,4 @@ export const BaseMap = forwardRef(function BaseMap(
       {children}
     </Map>
   );
-});
+};

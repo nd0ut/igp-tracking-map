@@ -3,6 +3,7 @@
  */
 module.exports = {
   ignoredRouteFiles: [".*"],
+  serverDependenciesToBundle: [/@uploadcare/, /mapbox-gl/],
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "build/index.js",

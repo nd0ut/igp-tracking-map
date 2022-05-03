@@ -1,0 +1,6 @@
+.uploader {
+  --ctx-name: 'uploader';
+  --cfg-pubkey: 'demopublickey';
+  --cfg-source-list: 'local';
+  --cfg-img-only: 1;
+}

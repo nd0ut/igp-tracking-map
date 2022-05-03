@@ -3,13 +3,13 @@
   "compilerOptions": {
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "lib": ["DOM", "DOM.Iterable", "esnext"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "ES2019",
+    "target": "esnext",
     "strict": true,
     "baseUrl": ".",
     "paths": {

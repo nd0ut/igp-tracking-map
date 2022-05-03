@@ -1,0 +1,10 @@
+uc-img {
+  --uc-img-breakpoints: '200, 500, 800';
+}
+
+uc-img img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
