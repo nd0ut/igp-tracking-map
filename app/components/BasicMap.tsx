@@ -9,10 +9,7 @@ import Map, {
 } from "react-map-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import geocoderStyles from "@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css";
-import mapboxgl from 'mapbox-gl';
-
-const MAPBOX_ACCESS_TOKEN =
-  "pk.eyJ1IjoibmQwdXQiLCJhIjoiY2wybmQzMmEwMHA3aDNkbWEzcnd2YWtqOCJ9.vV_Q858IfAQgVuxb-FkXeg";
+import mapboxgl from "mapbox-gl";
 
 export function links() {
   return [
@@ -23,7 +20,7 @@ export function links() {
 
 function MapboxGeocoderControl(props: { accessToken: string }) {
   useControl(() => {
-    return new MapboxGeocoder({...props, mapboxgl});
+    return new MapboxGeocoder({ ...props, mapboxgl });
   });
 
   return null;
@@ -43,7 +40,7 @@ export function BasicMap() {
   return (
     <Map
       onLoad={() => geolocateControlRef.current?.trigger()}
-      mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+      mapboxAccessToken={process.env.MAPBOX_ACCESS_TOKEN}
       initialViewState={{
         longitude: 30.308611,
         latitude: 59.9375,
@@ -52,7 +49,7 @@ export function BasicMap() {
       style={{ width: "100%", height: "100%" }}
       mapStyle="mapbox://styles/mapbox/outdoors-v11"
     >
-      <MapboxGeocoderControl accessToken={MAPBOX_ACCESS_TOKEN} />
+      <MapboxGeocoderControl accessToken={process.env.MAPBOX_ACCESS_TOKEN as string} />
       <MapboxLanguageControl />
       <NavigationControl />
       <ScaleControl />

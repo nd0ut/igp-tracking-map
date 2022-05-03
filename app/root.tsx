@@ -17,16 +17,20 @@ import { getSession } from "./services/session.server";
 import styles from "./styles/app.css";
 
 export function links() {
-  return [
-    { rel: "stylesheet", href: styles },
-  ];
+  return [{ rel: "stylesheet", href: styles }];
 }
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "Карта следовых полей",
   viewport: "width=device-width,initial-scale=1",
 });
+
+function getEnv() {
+  return {
+    MAPBOX_ACCESS_TOKEN_PUBLIC: process.env.MAPBOX_ACCESS_TOKEN_PUBLIC,
+  };
+}
 
 export let loader: LoaderFunction = async ({ request }) => {
   let authError;
@@ -35,11 +39,11 @@ export let loader: LoaderFunction = async ({ request }) => {
     let session = await getSession(request.headers.get("cookie"));
     authError = session.get(authenticator.sessionErrorKey);
   }
-  return { user, authError };
+  return { user, authError, env: getEnv() };
 };
 
 export default function App() {
-  const { user, authError } = useLoaderData();
+  const { user, authError, env } = useLoaderData();
   authError && console.log("error", authError);
 
   const initializeState: (snapshot: MutableSnapshot) => void = useCallback(
@@ -51,7 +55,7 @@ export default function App() {
   );
 
   return (
-    <html lang="en" data-theme="light">
+    <html lang="en" data-theme="winter">
       <head>
         <Meta />
         <Links />
@@ -63,6 +67,11 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.env = ${JSON.stringify(env)}`,
+          }}
+        />
       </body>
     </html>
   );

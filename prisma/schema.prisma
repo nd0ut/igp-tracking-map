@@ -12,10 +12,25 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  authId    String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  username  String   @unique
-  email     String   @unique
+  id             String          @id @default(uuid())
+  authId         String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  username       String          @unique
+  email          String          @unique
+  role           Role            @default(USER)
+  trackingFields TrackingField[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model TrackingField {
+  id        Int                              @id @default(autoincrement())
+  createdAt DateTime                         @default(now())
+  title     String
+  author    User                             @relation(fields: [authorId], references: [id])
+  authorId  String
 }
