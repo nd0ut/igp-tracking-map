@@ -1,19 +1,20 @@
-import type { MetaFunction } from "remix";
+import { useCallback } from "react";
+import { RecoilRoot, type MutableSnapshot } from "recoil";
+import type { LoaderFunction } from "remix";
 import {
   Links,
   LiveReload,
   Meta,
+  type MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
 } from "remix";
-import type { LoaderFunction } from "remix";
 import { authenticator, type User } from "~/util/auth.server";
-import { RecoilRoot, type MutableSnapshot } from "recoil";
-import { useCallback } from "react";
-import { userAtom } from "./store/userAtom";
 import { getSession } from "./services/session.server";
+import { type Env, envAtom } from "./store/envAtom";
+import { userAtom } from "./store/userAtom";
 import styles from "./styles/app.css";
 
 export function links() {
@@ -27,9 +28,10 @@ export const meta: MetaFunction = () => ({
 });
 
 function getEnv() {
-  return {
+  let env: Env = {
     MAPBOX_ACCESS_TOKEN_PUBLIC: process.env.MAPBOX_ACCESS_TOKEN_PUBLIC,
   };
+  return env;
 }
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -49,6 +51,7 @@ export default function App() {
   const initializeState: (snapshot: MutableSnapshot) => void = useCallback(
     ({ set }) => {
       set<User | null>(userAtom, user);
+      set<Env>(envAtom, env);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -67,11 +70,6 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.env = ${JSON.stringify(env)}`,
-          }}
-        />
       </body>
     </html>
   );

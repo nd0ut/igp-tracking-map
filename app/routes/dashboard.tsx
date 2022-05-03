@@ -24,7 +24,7 @@ export default function Dashboard() {
       </div>
       <div className="drawer-side">
         <label htmlFor="my-drawer" className="drawer-overlay"></label>
-        <div className="p-4 overflow-y-auto w-80 bg-base-100 text-base-content flex flex-col justify-between">
+        <div className="p-4 overflow-y-auto w-80 bg-base-200 text-base-content flex flex-col justify-between">
           <NavLink className="normal-case text-xl link link-hover" to="/">
             <h1 className="text-xl font-light gap-2 flex items-center">
               <Logo className="h-12 w-12" />

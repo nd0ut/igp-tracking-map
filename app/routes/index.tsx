@@ -1,17 +1,24 @@
-import { BasicMap, links as basicMapLinks } from "~/components/BasicMap";
-import { UserCircleIcon, FilterIcon, MenuIcon } from "@heroicons/react/solid";
-import { useRecoilValue } from "recoil";
-import { userAtom } from "~/store/userAtom";
-import { Logo } from "~/components/Logo";
+import { FilterIcon, MenuIcon, UserCircleIcon } from "@heroicons/react/solid";
+import { useRef } from "react";
+import {
+  GeolocateControl,
+  NavigationControl,
+  ScaleControl,
+} from "react-map-gl";
 import { NavLink } from "remix";
+import {
+  BaseMap,
+  links as baseMapLinks,
+  MapboxGeocoderControl,
+  MapboxLanguageControl,
+} from "~/components/BaseMap";
+import { Logo } from "~/components/Logo";
 
 export function links() {
-  return [...basicMapLinks()];
+  return [...baseMapLinks()];
 }
 
 export default function Index() {
-  const user = useRecoilValue(userAtom);
-
   return (
     <div className="drawer drawer-mobile">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -22,11 +29,19 @@ export default function Index() {
         >
           <MenuIcon className="h-9 w-9" />
         </label>
-        <BasicMap />
+        <BaseMap
+          initialViewState={{
+            longitude: 30.308611,
+            latitude: 59.9375,
+            zoom: 9,
+          }}
+          style={{ width: "100%", height: "100%" }}
+          mapStyle="mapbox://styles/mapbox/outdoors-v11"
+        />
       </div>
       <div className="drawer-side">
         <label htmlFor="my-drawer" className="drawer-overlay"></label>
-        <div className="p-4 overflow-y-auto w-80 bg-base-100 text-base-content flex flex-col justify-between">
+        <div className="p-4 overflow-y-auto w-80 bg-base-200 text-base-content flex flex-col justify-between">
           <NavLink className="normal-case text-xl" to="/">
             <h1 className="text-xl font-light  link link-hover gap-2 flex items-center">
               <Logo className="h-12 w-12" />
