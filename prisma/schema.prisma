@@ -12,14 +12,15 @@ datasource db {
 }
 
 model User {
-  id             String          @id @default(uuid())
-  authId         String          @unique
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  username       String          @unique
-  email          String          @unique
-  role           Role            @default(USER)
-  trackingFields TrackingField[]
+  id        String               @id @default(uuid())
+  authId    String               @unique
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  username  String               @unique
+  email     String               @unique
+  role      Role                 @default(USER)
+  fields    TrackingField[]
+  images    TrackingFieldImage[]
 }
 
 enum Role {
@@ -28,9 +29,22 @@ enum Role {
 }
 
 model TrackingField {
-  id        Int                              @id @default(autoincrement())
-  createdAt DateTime                         @default(now())
-  title     String
-  author    User                             @relation(fields: [authorId], references: [id])
-  authorId  String
+  id        String               @id @default(uuid())
+  createdAt DateTime             @default(now())
+  name      String
+  user      User                 @relation(fields: [userId], references: [id])
+  userId    String
+  address   String
+  area      Int
+  images    TrackingFieldImage[]
+}
+
+model TrackingFieldImage {
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now())
+  user      User          @relation(fields: [userId], references: [id])
+  userId    String
+  field     TrackingField @relation(fields: [fieldId], references: [id])
+  fieldId   String
+  uuid      String
 }

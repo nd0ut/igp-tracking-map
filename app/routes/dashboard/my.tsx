@@ -1,14 +1,24 @@
-import {
-  FilterIcon,
-  MenuIcon,
-  UserCircleIcon,
-  HeartIcon,
-  ViewListIcon,
-  ChevronLeftIcon,
-  PlusIcon,
-} from "@heroicons/react/solid";
-import { Outlet, Link } from "remix";
-import { Logo } from "~/components/Logo";
+import { PlusIcon } from "@heroicons/react/solid";
+import { Link, useLoaderData, type LoaderFunction } from "remix";
+import { authenticator } from "~/util/auth.server";
+import { db } from "~/util/db.server";
+
+export const loader: LoaderFunction = async ({ request }) => {
+  const userData = await authenticator.authenticate("auth0", request);
+  const user = await db.user.findUnique({
+    where: {
+      id: userData.id,
+    },
+    include: {
+      fields: {
+        include: {
+          images: true,
+        },
+      },
+    },
+  });
+  return user?.fields;
+};
 
 function AddButton() {
   return (
@@ -20,7 +30,8 @@ function AddButton() {
 }
 
 export default function My() {
-  const fields = [];
+  const fields = useLoaderData();
+  console.log(fields);
 
   if (!fields.length) {
     return (
@@ -31,12 +42,13 @@ export default function My() {
       </div>
     );
   }
-
   return (
-    <div className="grid grid-cols-3 gap-4 h-full w-full p-6">
-      <div>
-        <AddButton />
-      </div>
-    </div>
+    <>
+      <Link className="btn btn-primary gap-2" to="/dashboard/create-field">
+        Добавить новое поле
+        <PlusIcon className="h-5 w-5" />
+      </Link>
+      {JSON.stringify(fields, null, 2)}
+    </>
   );
 }
