@@ -1,24 +1,25 @@
 import { FilterIcon, MenuIcon, UserCircleIcon } from "@heroicons/react/solid";
-import { useRef } from "react";
-import {
-  GeolocateControl,
-  NavigationControl,
-  ScaleControl,
-} from "react-map-gl";
-import { NavLink } from "remix";
-import {
-  BaseMap,
-  links as baseMapLinks,
-  MapboxGeocoderControl,
-  MapboxLanguageControl,
-} from "~/components/BaseMap";
+import { useCallback, useRef } from "react";
+import { Layer, MapRef, Source, SymbolLayer, type FillLayer } from "react-map-gl";
+import { type LoaderFunction, NavLink, useLoaderData } from "remix";
+import { BaseMap, links as baseMapLinks } from "~/components/BaseMap";
 import { Logo } from "~/components/Logo";
+import { getFieldPointsGeojson, getFieldPolygonsGeojson } from "~/util/geojson.server";
 
 export function links() {
   return [...baseMapLinks()];
 }
 
+export const loader = async () => {
+  return {
+    polygonsGeojson: await getFieldPolygonsGeojson(),
+    pointsGeojson: await getFieldPointsGeojson(),
+  };
+};
+
 export default function Index() {
+  const { polygonsGeojson, pointsGeojson } = useLoaderData();
+
   return (
     <div className="drawer drawer-mobile">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -37,7 +38,10 @@ export default function Index() {
           }}
           style={{ width: "100%", height: "100%" }}
           mapStyle="mapbox://styles/mapbox/outdoors-v11"
-        />
+          polygonsGeojson={polygonsGeojson}
+          pointsGeojson={pointsGeojson}
+        >
+        </BaseMap>
       </div>
       <div className="drawer-side">
         <label htmlFor="my-drawer" className="drawer-overlay"></label>

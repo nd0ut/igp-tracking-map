@@ -1,9 +1,11 @@
+import { User } from "@prisma/client";
+import { redirect } from "remix";
 import { Authenticator } from "remix-auth";
 import { Auth0Strategy } from "remix-auth-auth0";
-import { sessionStorage } from "../services/session.server";
+import { destroySession, getSession, sessionStorage } from "../services/session.server";
 import { db } from "./db.server";
 
-export type User = {
+export type UserSession = {
   id: string;
   authId: string;
   createdAt: Date;
@@ -12,7 +14,32 @@ export type User = {
   email: string;
 };
 
-export const authenticator = new Authenticator<User>(sessionStorage);
+export const authenticator = new Authenticator<UserSession>(sessionStorage);
+
+export const requireUserSession = async (request: Request) => {
+  let userSession = await authenticator.authenticate('auth0', request);
+  console.log('userSession', userSession)
+  if (!userSession) {
+    throw redirect("/login/");
+  }
+  return userSession;
+};
+
+export const requireUser = async (request: Request): Promise<User> => {
+  let userSession = await requireUserSession(request)
+  const user = await db.user.findUnique({
+    where: {
+      id: userSession.id,
+    },
+  });
+
+  if (!user) {
+    await authenticator.logout(request, { redirectTo: "/login" });
+    throw redirect('/login')
+  }
+
+  return user;
+};
 
 const getConfig = () => {
   if (
@@ -33,12 +60,12 @@ const getConfig = () => {
 };
 
 let auth0Strategy = new Auth0Strategy(getConfig(), async ({ profile }) => {
-  const data: Pick<User, "authId" | "username" | "email"> = {
+  const data: Pick<UserSession, "authId" | "username" | "email"> = {
     authId: profile.id,
     username: profile.displayName,
     email: profile.emails[0].value,
   };
-  const user: User = await db.user.upsert({
+  const user: UserSession = await db.user.upsert({
     where: { authId: data.authId },
     update: data,
     create: data,

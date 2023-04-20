@@ -1455,9 +1455,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   flex-shrink: 0;
   cursor: pointer;
   -webkit-user-select: none;
-  -moz-user-select: none;
-   -ms-user-select: none;
-       user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -1481,7 +1481,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   text-transform: uppercase;
   text-transform: var(--btn-text-case, uppercase);
   -webkit-text-decoration-line: none;
-  text-decoration-line: none;
+          text-decoration-line: none;
   border-width: var(--border-btn, 1px);
   -webkit-animation: button-pop var(--animation-btn, 0.25s) ease-out;
           animation: button-pop var(--animation-btn, 0.25s) ease-out;
@@ -1527,8 +1527,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 }.btn-group > input[type="radio"].btn {
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+     -moz-appearance: none;
+          appearance: none;
 }.btn-group > input[type="radio"].btn:before {
   content: attr(data-title);
 }.card {
@@ -1587,8 +1587,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 1.5rem;
   cursor: pointer;
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   border-width: 1px;
   border-color: hsl(var(--bc) / var(--tw-border-opacity));
   --tw-border-opacity: 0.2;
@@ -1613,7 +1613,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 100%;
   overflow: hidden;
   height: 100vh;
-  height: 100svh;
+  height: 100dvh;
 }.drawer.drawer-end {
   direction: rtl;
 }.drawer.drawer-end > * {
@@ -1632,8 +1632,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 0px;
   width: 0px;
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   opacity: 0;
 }.drawer-toggle ~ .drawer-content {
   z-index: 0;
@@ -1725,9 +1725,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.label {
   display: flex;
   -webkit-user-select: none;
-  -moz-user-select: none;
-   -ms-user-select: none;
-       user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   align-items: center;
   justify-content: space-between;
   padding-left: 0.25rem;
@@ -1758,13 +1758,13 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.link {
   cursor: pointer;
   -webkit-text-decoration-line: underline;
-  text-decoration-line: underline;
+          text-decoration-line: underline;
 }.link-hover {
   -webkit-text-decoration-line: none;
-  text-decoration-line: none;
+          text-decoration-line: none;
 }.link-hover:hover {
   -webkit-text-decoration-line: underline;
-  text-decoration-line: underline;
+          text-decoration-line: underline;
 }.menu {
   display: flex;
   flex-direction: column;
@@ -1784,9 +1784,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.menu :where(li:not(.disabled):not(.menu-title)) > :where(*:not(ul)) {
   cursor: pointer;
   -webkit-user-select: none;
-  -moz-user-select: none;
-   -ms-user-select: none;
-       user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   align-items: center;
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -1812,6 +1812,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: flex;
 }.menu > :where(li:focus) > :where(ul) {
   display: flex;
+}.table {
+  position: relative;
+  text-align: left;
+}.table th:first-child {
+  position: sticky;
+  position: -webkit-sticky;
+  left: 0px;
+  z-index: 11;
 }.textarea {
   flex-shrink: 1;
   transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
@@ -1996,7 +2004,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-color: transparent;
   background-color: transparent;
   -webkit-text-decoration-line: underline;
-  text-decoration-line: underline;
+          text-decoration-line: underline;
 }.btn-link:focus-visible {
   outline: 2px solid 0 0 2px currentColor;
 }.btn-outline.btn-primary {
@@ -2239,9 +2247,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 0.1;
 }.menu li.disabled > * {
   -webkit-user-select: none;
-  -moz-user-select: none;
-   -ms-user-select: none;
-       user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   color: hsl(var(--bc) / var(--tw-text-opacity));
   --tw-text-opacity: 0.2;
 }.menu li.disabled > *:hover {
@@ -2355,6 +2363,38 @@ Ensure the default browser behavior of the `hidden` attribute.
   }100% {
     transform: translateY(0);
   }
+}.table :where(th, td) {
+  white-space: nowrap;
+  padding: 1rem;
+  vertical-align: middle;
+}.table tr.active th, .table tr.active td, .table tr.active:nth-child(even) th, .table tr.active:nth-child(even) td {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}.table tr.hover:hover th, .table tr.hover:hover td, .table tr.hover:nth-child(even):hover th, .table tr.hover:nth-child(even):hover td {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}.table:where(:not(.table-zebra)) :where(thead, tbody, tfoot) :where(tr:not(:last-child) :where(th, td)) {
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--b2, var(--b1)) / var(--tw-border-opacity));
+}.table :where(thead, tfoot) :where(th, td) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity));
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}.table :where(:first-child) :where(:first-child) :where(th, td):first-child {
+  border-top-left-radius: 0.5rem;
+}.table :where(:first-child) :where(:first-child) :where(th, td):last-child {
+  border-top-right-radius: 0.5rem;
+}.table :where(:last-child) :where(:last-child) :where(th, td):first-child {
+  border-bottom-left-radius: 0.5rem;
+}.table :where(:last-child) :where(:last-child) :where(th, td):last-child {
+  border-bottom-right-radius: 0.5rem;
+}.table :where(tbody th, tbody td) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--b1) / var(--tw-bg-opacity));
 }.textarea-bordered {
   --tw-border-opacity: 0.2;
 }.textarea:focus {
@@ -2381,6 +2421,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.textarea-disabled::placeholder, .textarea[disabled]::placeholder {
   color: hsl(var(--bc) / var(--tw-placeholder-opacity));
   --tw-placeholder-opacity: 0.2;
+}.btn-xs {
+  height: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  min-height: 1.5rem;
+  font-size: 0.75rem;
 }.btn-square:where(.btn-xs) {
   height: 1.5rem;
   width: 1.5rem;
@@ -2396,6 +2442,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 }.btn-square:where(.btn-lg) {
   height: 4rem;
   width: 4rem;
+  padding: 0px;
+}.btn-circle:where(.btn-xs) {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 9999px;
   padding: 0px;
 }.card-side {
   align-items: stretch;
@@ -2456,8 +2507,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: flex;
 }.inline-flex {
   display: inline-flex;
+}.table {
+  display: table;
 }.grid {
   display: grid;
+}.hidden {
+  display: none;
 }.h-60 {
   height: 15rem;
 }.h-9 {
@@ -2524,6 +2579,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   place-self: start;
 }.overflow-hidden {
   overflow: hidden;
+}.overflow-x-auto {
+  overflow-x: auto;
 }.overflow-y-auto {
   overflow-y: auto;
 }.rounded-lg {
@@ -2544,8 +2601,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.5rem;
 }.p-10 {
   padding: 2.5rem;
-}.p-6 {
-  padding: 1.5rem;
 }.px-5 {
   padding-left: 1.25rem;
   padding-right: 1.25rem;
@@ -2581,6 +2636,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }.filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}.transition {
+  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }body {
   font-family: "Noto Sans", sans-serif;
 }

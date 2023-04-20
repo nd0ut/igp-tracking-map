@@ -1,13 +1,15 @@
 import { PlusIcon } from "@heroicons/react/solid";
+import { type TrackingField } from "@prisma/client";
 import { Link, useLoaderData, type LoaderFunction } from "remix";
-import { authenticator } from "~/util/auth.server";
+import { requireUser } from "~/util/auth.server";
 import { db } from "~/util/db.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const userData = await authenticator.authenticate("auth0", request);
+  const { id } = await requireUser(request);
+
   const user = await db.user.findUnique({
     where: {
-      id: userData.id,
+      id: id,
     },
     include: {
       fields: {
@@ -17,38 +19,66 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     },
   });
-  return user?.fields;
+
+  return user?.fields || [];
 };
 
-function AddButton() {
-  return (
-    <Link className="btn btn-primary gap-2" to="/dashboard/create-field">
-      Добавить новое поле
-      <PlusIcon className="h-5 w-5" />
-    </Link>
-  );
-}
-
 export default function My() {
-  const fields = useLoaderData();
-  console.log(fields);
+  const fields = useLoaderData<TrackingField[]>();
 
-  if (!fields.length) {
-    return (
-      <div className="flex items-center justify-center h-full w-full p-6">
-        <div>
-          <AddButton />
-        </div>
-      </div>
-    );
-  }
   return (
     <>
-      <Link className="btn btn-primary gap-2" to="/dashboard/create-field">
-        Добавить новое поле
-        <PlusIcon className="h-5 w-5" />
-      </Link>
-      {JSON.stringify(fields, null, 2)}
+      <div className="overflow-x-auto w-full p-10">
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>Адрес</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {fields.map((field) => (
+              <tr key={field.id}>
+                <td>
+                  <div>
+                    <div className="font-bold">{field.name}</div>
+                  </div>
+                </td>
+                <td>{field.address}</td>
+                <th>
+                  <Link
+                    to={`/dashboard/fields/edit/${field.id}/`}
+                    className="btn btn-ghost btn-xs"
+                  >
+                    Детали
+                  </Link>
+                </th>
+              </tr>
+            ))}
+            {!fields.length && (
+              <tr>
+                <td>
+                  <div>
+                    <div className="font-bold">Здесь будут ваши поля</div>
+                  </div>
+                </td>
+              </tr>
+            )}
+            <tr>
+              <td>
+                <Link
+                  className="btn btn-primary gap-2"
+                  to="/dashboard/fields/create/"
+                >
+                  Добавить новое поле
+                  <PlusIcon className="h-5 w-5" />
+                </Link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }

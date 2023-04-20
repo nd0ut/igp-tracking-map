@@ -11,7 +11,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "remix";
-import { authenticator, type User } from "~/util/auth.server";
+import { authenticator, type UserSession } from "~/util/auth.server";
 import { getSession } from "./services/session.server";
 import { type Env, envAtom } from "./store/envAtom";
 import { userAtom } from "./store/userAtom";
@@ -50,7 +50,7 @@ export default function App() {
 
   const initializeState: (snapshot: MutableSnapshot) => void = useCallback(
     ({ set }) => {
-      set<User | null>(userAtom, user);
+      set<UserSession | null>(userAtom, user);
       set<Env>(envAtom, env);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

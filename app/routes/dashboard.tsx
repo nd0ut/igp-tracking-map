@@ -13,7 +13,7 @@ export default function Dashboard() {
   return (
     <div className="drawer drawer-mobile">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col items-center justify-center">
+      <div className="drawer-content flex flex-col items-center">
         <label
           htmlFor="my-drawer"
           className="fixed left-0 top-0 z-10 mt-2 ml-2 btn btn-square btn-ghost drawer-button"
