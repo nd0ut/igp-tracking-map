@@ -51,6 +51,7 @@ export function Uploader({
     }
     const btnEl = btnRef.current;
     btnEl?.querySelector("button")?.classList.add("btn", "btn-accent");
+    btnEl?.querySelector("button")?.setAttribute("type", "button");
 
     const dataOutputEl = dataOutputRef.current;
     dataOutputEl?.addEventListener("data-output", handleDataOutput);
@@ -85,6 +86,7 @@ export function Uploader({
         <uc-confirmation-dialog></uc-confirmation-dialog>
         <uc-cloud-image-editor></uc-cloud-image-editor>
       </uc-modal>
+
 
       <Portal node={typeof document !== "undefined" ? document.body : null}>
         <uc-message-box class="uc-wgt-common uploader"></uc-message-box>

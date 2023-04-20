@@ -13,7 +13,7 @@ const getField = async (id: string) => {
       id: id,
     },
     include: {
-      images: true,
+      updates: true,
     },
   });
 

@@ -24,6 +24,10 @@ export type FormData = {
   address: string;
   area: string;
   features: Feature<Polygon>[];
+  road: number;
+  cover: string[];
+  description: string;
+  actualAt: string;
   images: UploadcareFile[];
 };
 
@@ -34,6 +38,21 @@ export function links() {
     { rel: "stylesheet", href: style },
   ];
 }
+
+const mapStylesEnum = {
+  outdoors: 'mapbox://styles/mapbox/outdoors-v11', 
+  satellite: "mapbox://styles/mapbox/satellite-streets-v11"
+};
+
+const coverTypes = ['пашня', 'низкая травка', 'высокая травка', 'скошенная трава', 'бурьян', 'болото'];
+const coverNone: {[key: string]: boolean} = {}; 
+
+coverTypes.forEach(key => {
+  coverNone[key] = false; 
+});
+
+
+
 
 export function CreateField() {
   const navigate = useNavigate();
@@ -64,6 +83,8 @@ export function CreateField() {
   );
   register("features", { required: true });
   register("images", { required: true });
+  register("road", { required: true });
+  register("cover", { required: true });
 
   const { features, handlers: drawHandlers } = useDrawFeatures();
   const center = useFeaturesCenter(features);
@@ -71,6 +92,25 @@ export function CreateField() {
   const area = useFeaturesArea(features);
 
   const [images, setImages] = useState<UploadcareFile[]>([]);
+  const [mapStyle, setMapStyle] = useState(mapStylesEnum.outdoors);
+  const [cover, setCover] = useState(coverNone);
+  const [roadRating, setRoadRating] = useState<number>(0);
+
+  function Rating() {
+    return (
+    <div className="rating">
+        {Array.from({length: 5}, (_, i) => i + 1).map( i => (
+        <label key={i}>
+            <input type="radio" name="stars" value={i} checked={roadRating == i} onChange={() => setRoadRating(i)}/>
+            {[...Array(i).keys()].map( j => (
+              <span className="icon" key={j}>★</span>
+            ))}
+        </label>
+        ))}
+    </div>
+    )
+  }
+
   const handleFilesChange = useCallback(
     (files: UploadcareFile[]) => setImages(files),
     []
@@ -83,6 +123,14 @@ export function CreateField() {
   useEffect(() => {
     setValue("images", images);
   }, [images, setValue]);
+
+  useEffect(() => {
+    setValue("road", roadRating);
+  }, [roadRating, setValue]);
+
+  useEffect(() => {
+    setValue("cover", Object.keys(cover).filter(key => cover[key]));
+  }, [cover, setValue]);
 
   console.log(errors);
 
@@ -134,7 +182,7 @@ export function CreateField() {
                   zoom: 9,
                 }}
                 style={{ width: "100%", height: "100%" }}
-                mapStyle="mapbox://styles/mapbox/outdoors-v11"
+                mapStyle={mapStyle}
               >
                 <FullscreenControl />
                 <DrawControl
@@ -147,6 +195,22 @@ export function CreateField() {
                   defaultMode="draw_polygon"
                   {...drawHandlers}
                 />
+                <div id="map-source-menu">
+                  <input id="satellite"
+                    type="radio"
+                    name="rtoggle"
+                    value="satellite"
+                    checked={mapStyle == mapStylesEnum.satellite}
+                    onChange={() => {setMapStyle(mapStylesEnum.satellite)}}/>
+                  <label htmlFor="satellite">Cпутник</label>
+                  <input id="outdoors"
+                    type="radio"
+                    name="rtoggle"
+                    value="outdoors"
+                    checked={mapStyle == mapStylesEnum.outdoors}
+                    onChange={() => {setMapStyle(mapStylesEnum.outdoors)}}/>
+                  <label htmlFor="outdoors">Карта</label>
+                </div>
               </BaseMap>
             </div>
           </div>
@@ -160,7 +224,7 @@ export function CreateField() {
               </label>
               <textarea
                 {...register("address", { required: true })}
-                rows={4}
+                rows={2}
                 placeholder="Будет определён автоматически"
                 defaultValue={address.data}
                 className={cx(
@@ -171,7 +235,7 @@ export function CreateField() {
             </div>
             <div className="form-control w-full">
               <label className="label">
-                <span className="label-text">Площадь</span>
+                <span className="label-text">Площадь, га</span>
                 {errors.name && (
                   <div className="badge badge-error gap-2">Required</div>
                 )}
@@ -180,12 +244,56 @@ export function CreateField() {
                 {...register("area", { required: true })}
                 type="number"
                 placeholder="Будет определена автоматически"
-                defaultValue={area || ""}
+                defaultValue={Math.round(area / 10000) || ""}
                 className={cx(
                   "input input-bordered w-full",
                   errors.name && "input-error"
                 )}
               />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Проезд</span>
+                {errors.name && (
+                  <div className="badge badge-error gap-2">Required</div>
+                )}
+              </label>
+              <Rating />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Покрытие</span>
+              </label>
+              {coverTypes.map(name => (
+              <span key={name}>
+                <input type="checkbox" value={name} checked={cover[name]} onChange={evt => setCover({...cover, [name]: evt.target.checked})}></input>
+                <label htmlFor={name} >{name}</label>
+              </span>))
+              }
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Особенности</span>
+              </label>
+              <textarea
+                {...register("description", { required: true })}
+                rows={2}
+                placeholder="Любая информация о текущем состоянии поля и в целом об обстановке"
+                className={cx(
+                  "textarea textarea-bordered resize-none w-full",
+                  errors.name && "textarea-error"
+                )}
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text">Информация актуальна на</span>
+              </label>
+              <input type="date"
+                {...register("actualAt", { required: true })}
+                defaultValue={new Date().toJSON().slice(0,10)}
+                min="2022-02-24" max={new Date().toJSON().slice(0,10)}> 
+              </input>
             </div>
           </div>
         </div>

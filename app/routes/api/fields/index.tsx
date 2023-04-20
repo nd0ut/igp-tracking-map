@@ -12,6 +12,17 @@ export type TrackingField = {
   area: number;
 };
 
+export type TrackingFieldUpdate = {
+  id:        string;
+  createdAt: Date;
+  userId:    string;
+  fieldId:   string;
+  actualAt:  Date;
+  road:      number;
+  cover:     Array<string>;
+  description:     string;
+};
+
 export type TrackingFieldImage = {
   id: string;
   createdAt: Date;
@@ -40,12 +51,27 @@ export const action: ActionFunction = async ({ request }) => {
     uuid: image.uuid,
   }));
 
+  const updateData: Omit<
+    TrackingFieldUpdate,
+    "id" | "createdAt" | "fieldId"
+  > = {
+    userId: user.id,
+    actualAt: new Date(Date.parse(data.actualAt)),
+    road: data.road,
+    cover: data.cover,
+    description: data.description,
+  };
+
   await db.trackingField.create({
     data: {
       ...fieldData,
-      images: {
-        create: imagesData,
-      },
+      updates: 
+         {create: {
+          ...updateData,
+          images: {
+            create: imagesData
+          }
+        }}
     },
   });
   return json({ status: "ok" });

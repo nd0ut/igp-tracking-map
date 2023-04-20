@@ -1,18 +1,16 @@
 /* BASE CONFIGURATION: */
-:where(.uc-wgt-cfg, .uc-wgt-common),
+.uc-wgt-cfg,
+.uc-wgt-common,
 :host {
-  --cfg-pubkey: 'YOUR_PUBLIC_KEY';
   --cfg-multiple: 1;
-  --cfg-multiple-min: 0;
-  --cfg-multiple-max: 0;
-
   --cfg-confirm-upload: 1;
   --cfg-img-only: 0;
   --cfg-accept: '';
   --cfg-store: 1;
   --cfg-camera-mirror: 1;
   --cfg-source-list: 'local, url, camera, dropbox, gdrive, facebook';
-  --cfg-max-local-file-size-bytes: 0;
+  --cfg-max-files: 10;
+  --cfg-max-local-file-size-bytes: 30000;
   --cfg-thumb-size: 76;
   --cfg-show-empty-list: 0;
   --cfg-use-local-image-editor: 0;
@@ -30,13 +28,9 @@
   --cfg-data-output-fire-events: 1;
   --cfg-data-output-from: '*dataOutput';
   --cfg-data-output-form-value: 1;
-
-  --cfg-remote-tab-session-key: '';
 }
 /* ICONS: */
-.uc-wgt-icons,
-.uc-wgt-common,
-:host {
+.uc-wgt-icons, .uc-wgt-common, :host {
   --icon-default: 'm13 21.9506c5.0533-.5017 9-4.7653 9-9.9506 0-5.52285-4.4772-10-10-10-5.52285 0-10 4.47715-10 10 0 5.1853 3.94668 9.4489 9 9.9506v-11.5364l-2.79289 2.7929c-.39053.3906-1.02369.3906-1.41422 0-.39052-.3905-.39052-1.0237 0-1.4142l5.20711-5.20708 5.2071 5.20708c.3905.3905.3905 1.0237 0 1.4142-.3905.3906-1.0237.3906-1.4142 0l-2.7929-2.7929z';
   --icon-file: 'm13.3333 5.57143 4 3.85714h-4zm-6.66663-2.57143c-1.47266 0-2.66667 1.15121-2.66667 2.57143v12.85717c0 1.4202 1.19401 2.5714 2.66667 2.5714h10.66663c1.4727 0 2.6667-1.1512 2.6667-2.5714v-9.00003l-6.6667-6.42857z';
   --icon-close: 'M17.6569 7.75734c.3905-.39053.3905-1.02369 0-1.41421-.3906-.39053-1.0237-.39053-1.4143 0L12 10.5858 7.75736 6.34313c-.39053-.39053-1.02369-.39053-1.41421 0-.39053.39052-.39053 1.02368 0 1.41421L10.5858 12l-4.24266 4.2426c-.39052.3905-.39052 1.0237 0 1.4142.39053.3906 1.02369.3906 1.41422 0L12 13.4142l4.2426 4.2426c.3906.3906 1.0237.3906 1.4143 0 .3905-.3905.3905-1.0237 0-1.4142L13.4142 12l4.2427-4.24266Z';
@@ -106,7 +100,6 @@
   --l10n-edit-detail: 'Details';
   --l10n-back: 'Back';
   --l10n-done: 'Done';
-  --l10n-ok: 'Ok';
   --l10n-remove-from-list: 'Remove';
   --l10n-no: 'No';
   --l10n-yes: 'Yes';
@@ -114,10 +107,8 @@
   --l10n-are-you-sure: 'Are you sure?';
   --l10n-selected-count: 'Selected:';
   --l10n-upload-error: 'Upload error';
-  --l10n-validation-error: 'Validation error';
   --l10n-no-files: 'No files selected';
   --l10n-browse: 'Browse';
-  --l10n-not-uploaded-yet: 'Not uploaded yet...';
 
   --l10n-src-type-local: 'Local file';
   --l10n-src-type-from-url: 'From URL';
@@ -171,12 +162,6 @@
   --l10n-camera-permissions-denied: 'Camera access denied';
   --l10n-camera-permissions-prompt: 'Camera access prompted';
   --l10n-camera-permissions-request: 'Request permissions';
-
-  --l10n-files-count-limit-error-title: 'Files count limit overflow';
-  --l10n-files-count-limit-error-too-few: 'You’ve chosen {{total}}. At least {{min}} required.';
-  --l10n-files-count-limit-error-too-many: 'You’ve chosen too many files. {{max}} is maximum.';
-
-  --l10n-files-max-size-limit-error: 'File is too big. Max file size is {{maxFileSize}} bytes.';
 }
 /* THEME */
 .uc-wgt-theme,
@@ -375,7 +360,7 @@
 :host * {
   box-sizing: border-box;
 }
-:where(.uc-wgt-theme, .uc-wgt-common) [hidden],
+:where(.uc-wgt-theme, .uc-wgt-common, :host) [hidden],
 :host [hidden] {
   display: none !important;
 }
@@ -383,11 +368,11 @@
 :host [activity]:not([active]) {
   display: none;
 }
-:where(.uc-wgt-theme, .uc-wgt-common) button,
+:where(.uc-wgt-theme, .uc-wgt-common, :host) button,
 :host button {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: var(--ui-size);
   padding-right: 1.4em;
   padding-left: 1.4em;
@@ -403,13 +388,21 @@
           user-select: none;
 }
 @media only screen and (max-width: 800px) {
-  :where(.uc-wgt-theme, .uc-wgt-common) button,
+  :where(.uc-wgt-theme, .uc-wgt-common, :host) button,
   :host button {
     padding-right: 1em;
     padding-left: 1em;
   }
 }
-:where(.uc-wgt-theme, .uc-wgt-common) button.primary-btn,
+:where(.uc-wgt-theme, .uc-wgt-common)
+  :where(button[disabled], button.primary-btn[disabled], button.secondary-btn[disabled]),
+:host :where(button[disabled], button.primary-btn[disabled], button.secondary-btn[disabled]) {
+  color: var(--clr-btn-txt-disabled);
+  background-color: var(--clr-btn-bgr-disabled);
+  box-shadow: var(--shadow-btn-disabled);
+  pointer-events: none;
+}
+:where(.uc-wgt-theme, .uc-wgt-common, :host) button.primary-btn,
 :host button.primary-btn {
   color: var(--clr-btn-txt-primary);
   background-color: var(--clr-btn-bgr-primary);
@@ -438,14 +431,6 @@
 :where(.uc-wgt-theme, .uc-wgt-common) button.secondary-btn:active,
 :host button.secondary-btn:active {
   background-color: var(--clr-btn-bgr-secondary-active);
-}
-:where(.uc-wgt-theme, .uc-wgt-common)
-  :is(button[disabled], button.primary-btn[disabled], button.secondary-btn[disabled]),
-:host :is(button[disabled], button.primary-btn[disabled], button.secondary-btn[disabled]) {
-  color: var(--clr-btn-txt-disabled);
-  background-color: var(--clr-btn-bgr-disabled);
-  box-shadow: var(--shadow-btn-disabled);
-  pointer-events: none;
 }
 :where(.uc-wgt-theme, .uc-wgt-common) a,
 :host a {
@@ -480,11 +465,6 @@
 :host input[type='text']:focus {
   border-color: var(--clr-accent);
   outline: none;
-}
-:where(.uc-wgt-theme, .uc-wgt-common) input[disabled],
-:host input[disabled] {
-  opacity: 0.6;
-  pointer-events: none;
 }
 /* UI COMPONENTS: */
 uc-icon {
@@ -932,15 +912,13 @@ uc-upload-list .files {
   overflow: auto;
 }
 uc-upload-list .toolbar {
-  display: flex;
-  gap: var(--gap-mid);
-  justify-content: space-between;
+  display: grid;
+  grid-gap: var(--gap-mid);
+  grid-template-columns: -webkit-min-content 1fr -webkit-min-content -webkit-min-content;
+  grid-template-columns: min-content 1fr min-content min-content;
   padding: var(--gap-mid);
   background-color: var(--clr-background);
   border-top: var(--border-light);
-}
-uc-upload-list .toolbar-spacer {
-  flex: 1;
 }
 uc-start-from {
   display: grid;
@@ -1104,13 +1082,6 @@ uc-upload-details .info-block > .info-block_name {
   color: var(--clr-txt-light);
   font-size: 0.8em;
 }
-uc-upload-details .cdn-link[disabled] {
-  pointer-events: none;
-}
-uc-upload-details .cdn-link[disabled]::before {
-  content: var(--l10n-not-uploaded-yet);
-  filter: grayscale(1);
-}
 uc-editable-canvas {
   position: absolute;
   top: 0;
@@ -1198,9 +1169,6 @@ uc-message-box {
   border-radius: var(--border-radius-frame);
   box-shadow: var(--modal-shadow);
   transition: calc(var(--transition-duration) * 2);
-}
-uc-message-box[inline] {
-  position: static;
 }
 uc-message-box:not([active]) {
   transform: translateY(10px);
@@ -1465,9 +1433,7 @@ uc-activity-icon {
   </defs>\
   ';
 }
-.uc-cldtr-l10n_en-US,
-.uc-cldtr-common,
-:host {
+.uc-cldtr-l10n_en-US, .uc-cldtr-common, :host {
   --l10n-cancel: 'Cancel';
   --l10n-apply: 'Apply';
   --l10n-brightness: 'Brightness';
@@ -1542,34 +1508,29 @@ uc-activity-icon {
 
   --shadow-base: 0px 5px 15px rgba(var(--rgb-shadow), 0.1), 0px 1px 4px rgba(var(--rgb-shadow), 0.15);
 }
-.uc-cldtr-common :is([can-handle-paste]:hover, [can-handle-paste]:focus),
-:host :is([can-handle-paste]:hover, [can-handle-paste]:focus) {
+:where(.uc-cldtr-common, :host) :where([can-handle-paste]:hover, [can-handle-paste]:focus) {
   --can-handle-paste: 'true';
 }
-.uc-cldtr-common :is([tabindex][focus-visible], [tabindex]:hover, [with-effects][focus-visible], [with-effects]:hover),
-:host :is([tabindex][focus-visible], [tabindex]:hover, [with-effects][focus-visible], [with-effects]:hover) {
+:where(.uc-cldtr-common, :host)
+  :where([tabindex][focus-visible], [tabindex]:hover, [with-effects][focus-visible], [with-effects]:hover) {
   --filter-effect: var(--hover-filter) !important;
   --opacity-effect: var(--hover-opacity) !important;
   --color-effect: var(--hover-color-rgb) !important;
 }
-.uc-cldtr-common :is([tabindex]:active, [with-effects]:active),
-:host :is([tabindex]:active, [with-effects]:active) {
+:where(.uc-cldtr-common, :host) :where([tabindex]:active, [with-effects]:active) {
   --filter-effect: var(--down-filter) !important;
   --opacity-effect: var(--down-opacity) !important;
   --color-effect: var(--down-color-rgb) !important;
 }
-.uc-cldtr-common :is([tabindex][active], [with-effects][active]),
-:host :is([tabindex][active], [with-effects][active]) {
+:where(.uc-cldtr-common, :host) :where([tabindex][active], [with-effects][active]) {
   --filter-effect: var(--active-filter) !important;
   --opacity-effect: var(--active-opacity) !important;
   --color-effect: var(--active-color-rgb) !important;
 }
-.uc-cldtr-common [hidden-scrollbar]::-webkit-scrollbar,
-:host [hidden-scrollbar]::-webkit-scrollbar {
+:where(.uc-cldtr-common, :host) [hidden-scrollbar]::-webkit-scrollbar {
   display: none;
 }
-.uc-cldtr-common [hidden-scrollbar],
-:host [hidden-scrollbar] {
+:where(.uc-cldtr-common, :host) [hidden-scrollbar] {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -1617,8 +1578,8 @@ uc-cloud-editor > .wrapper {
 }
 uc-cloud-editor > .wrapper > .viewport {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 uc-cloud-editor > .wrapper > .viewport > .image_container > .image {
@@ -1683,8 +1644,8 @@ uc-cloud-editor > .wrapper > .toolbar > .toolbar_content {
 }
 uc-cloud-editor > .wrapper > .toolbar > .toolbar_content.toolbar_content__viewer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   height: var(--size-panel-heading);
   padding-right: var(--l-toolbar-horizontal-padding);
   padding-left: var(--l-toolbar-horizontal-padding);
@@ -1726,13 +1687,13 @@ uc-cloud-editor > .wrapper > .network_problems_splash > .network_problems_conten
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 uc-cloud-editor > .wrapper > .network_problems_splash > .network_problems_content > .network_problems_icon {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
   color: rgba(var(--rgb-text-base), 0.6);
@@ -1745,8 +1706,8 @@ uc-cloud-editor > .wrapper > .network_problems_splash > .network_problems_conten
 }
 uc-cloud-editor > .wrapper > .network_problems_splash > .network_problems_footer {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: var(--size-panel-heading);
 }
 uc-crop-frame > .svg {
@@ -1984,8 +1945,8 @@ uc-editor-scroller {
 }
 uc-editor-slider {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: 66px;
 }
@@ -2041,8 +2002,8 @@ uc-editor-toolbar > .toolbar-container > .sub-toolbar.sub-toolbar--bottom-hidden
 }
 uc-editor-toolbar > .toolbar-container > .sub-toolbar > .controls-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   padding-right: var(--l-controls-padding);
   padding-left: var(--l-controls-padding);
 }
@@ -2114,8 +2075,8 @@ uc-editor-toolbar .controls-list_last-item {
 uc-editor-toolbar .filter-tooltip_container {
   position: absolute;
   display: flex;
-  justify-content: center;
   align-items: flex-start;
+  justify-content: center;
   width: 100%;
   height: 100%;
 }
@@ -2182,8 +2143,8 @@ uc-btn-ui .text {
 }
 uc-btn-ui .icon {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   color: rgba(var(--color-effect), var(--opacity-effect));
   filter: brightness(var(--filter-effect));
   transition: var(--l-transition-effect);
@@ -2279,8 +2240,8 @@ uc-slider-ui {
 
   position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
   height: calc(var(--l-thumb-size) + (var(--l-zero-dot-size) + var(--l-zero-dot-offset)) * 2);
 }
@@ -2298,8 +2259,8 @@ uc-slider-ui .thumb {
 uc-slider-ui .steps {
   position: absolute;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -2357,8 +2318,8 @@ ctx-provider {
   --color-primary-accent: blue;
 
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 190px;
   height: 40px;
   padding-right: 10px;

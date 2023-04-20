@@ -20,6 +20,7 @@ model User {
   email     String               @unique
   role      Role                 @default(USER)
   fields    TrackingField[]
+  updates   TrackingFieldUpdate[]
   images    TrackingFieldImage[]
 }
 
@@ -29,24 +30,38 @@ enum Role {
 }
 
 model TrackingField {
-  id        String                               @id @default(uuid())
-  createdAt DateTime                             @default(now())
+  id        String               @id @default(uuid())
+  createdAt DateTime             @default(now())
   name      String
-  user      User                                 @relation(fields: [userId], references: [id])
+  user      User                 @relation(fields: [userId], references: [id])
   userId    String
   address   String
-  area      Int
-  images    TrackingFieldImage[]
+  area      Int  
+  updates   TrackingFieldUpdate[]
   location  Unsupported("geometry(Point, 3857)")?
   polygons  Unsupported("geometry(MultiPolygon, 3857)")?
 }
 
+model TrackingFieldUpdate {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  user        User          @relation(fields: [userId], references: [id])
+  userId      String
+  field       TrackingField @relation(fields: [fieldId], references: [id])
+  fieldId     String
+  actualAt    DateTime
+  road        Int
+  cover       String[]
+  description String  
+  images      TrackingFieldImage[]
+}
+
 model TrackingFieldImage {
-  id        Int           @id @default(autoincrement())
-  createdAt DateTime      @default(now())
-  user      User          @relation(fields: [userId], references: [id])
+  id        Int                 @id @default(autoincrement())
+  createdAt DateTime            @default(now())
+  user      User                @relation(fields: [userId], references: [id])
   userId    String
-  field     TrackingField @relation(fields: [fieldId], references: [id])
-  fieldId   String
+  update    TrackingFieldUpdate @relation(fields: [updateId], references: [id])
+  updateId  Int
   uuid      String
 }

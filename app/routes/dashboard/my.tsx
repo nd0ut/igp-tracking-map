@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     include: {
       fields: {
         include: {
-          images: true,
+          updates: true,
         },
       },
     },
